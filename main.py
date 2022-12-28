@@ -1,42 +1,46 @@
 import sys
-from tkinter import *
 
 
-class MyWindow:
-    def __init__(self, win):
-        self.lbl1=Label(win, text="Enter text: ")
-        self.lbl3=Label(win, text='Result')
+# from tkinter import *
+#
+#
+# class MyWindow:
+#     def __init__(self, win):
+#         self.lbl1=Label(win, text="Enter text: ")
+#         self.lbl3=Label(win, text='Result')
+#
+#         self.t1=Entry(bd=3)
+#         self.t3=Entry()
+#         self.btn1 = Button(win, text='Encrypt')
+#         self.btn2=Button(win, text='Decrypt')
+#         self.lbl1.place(x=100, y=50)
+#         self.t1.place(x=200, y=50)
+#         self.b1=Button(win, text='Encrypt', command=self.add)
+#         self.b2=Button(win, text='Decrypt')
+#         self.b2.bind('<Button-1>', self.sub)
+#         self.b1.place(x=100, y=150)
+#         self.b2.place(x=200, y=150)
+#         self.lbl3.place(x=100, y=200)
+#         self.t3.place(x=200, y=200)
+#
+#     def add(self):
+#         self.t3.delete(0, 'end')
+#         text=self.t1.get()
+#         cipherText=encrypt_CBC(text,key)
+#         self.t3.insert(END, cipherText)
+#     def sub(self, event):
+#         self.t3.delete(0, 'end')
+#         cipherText=self.t1.get()
+#         text=decrypt_CBC(cipherText,key)
+#         self.t3.insert(END, text)
+#
+# window=Tk()
+# mywin=MyWindow(window)
+# window.title('CBC with DES')
+# window.geometry("400x300+10+10")
+# window.mainloop()
+#
 
-        self.t1=Entry(bd=3)
-        self.t3=Entry()
-        self.btn1 = Button(win, text='Encrypt')
-        self.btn2=Button(win, text='Decrypt')
-        self.lbl1.place(x=100, y=50)
-        self.t1.place(x=200, y=50)
-        self.b1=Button(win, text='Encrypt', command=self.add)
-        self.b2=Button(win, text='Decrypt')
-        self.b2.bind('<Button-1>', self.sub)
-        self.b1.place(x=100, y=150)
-        self.b2.place(x=200, y=150)
-        self.lbl3.place(x=100, y=200)
-        self.t3.place(x=200, y=200)
-
-    def add(self):
-        self.t3.delete(0, 'end')
-        text=self.t1.get()
-        cipherText=encrypt_DES(text,key)
-        self.t3.insert(END, cipherText)
-    def sub(self, event):
-        self.t3.delete(0, 'end')
-        cipherText=self.t1.get()
-        text=decrypt_DES(cipherText,key)
-        self.t3.insert(END, text)
-
-window=Tk()
-mywin=MyWindow(window)
-window.title('CBC with DES')
-window.geometry("400x300+10+10")
-window.mainloop()
 # Hexadecimal to binary conversion
 def hex2bin(s):
     mp = {'0': "0000",
@@ -318,6 +322,7 @@ def decrypt_CBC(myList, iv):
         iv = myList[i]
     return final_text
 
+
 # --------------------------------------------------------------------------------
 
 # --parity bit drop table , to transfer key from 64 to 56
@@ -375,13 +380,12 @@ for i in range(0, 16):
     rk.append(bin2hex(round_key))
 
 iv = "133457799BBCDFF1"
+iv = hex2bin(iv)
+
 # bodzzzzzsasdsfjhbodzzzzz
 userInput = 'bodzzzzzsasdsfjhbodzzzzz'
 
-iv = hex2bin(iv)
-
-# plaintext to binary
-userInput2bin = ''.join(format(ord(i), '08b') for i in userInput)
+userInput2bin = ''.join(format(ord(i), '08b') for i in userInput)  # plaintext to binary
 # print(userInput2bin)
 
 
@@ -389,29 +393,25 @@ userInput2bin = ''.join(format(ord(i), '08b') for i in userInput)
 # print('iv length is ', len(iv), 'bits')
 print('userInput length is ', len(userInput2bin), 'bits\n')
 
-
-
 # print("Encryption\n")
-# myList = inputToBlocks(userInput2bin)
-# final_ciphertext = encrypt_CBC(myList, iv)
-# print('The final cipher text is : ', bin2hex(final_ciphertext))
-# print('length of cipherText :', len(final_ciphertext))
+myList = inputToBlocks(userInput2bin)
+final_ciphertextInBin = encrypt_CBC(myList, iv)
+
+print('The final cipher text is : ', bin2hex(final_ciphertextInBin))
+print('length of cipherText :', len(final_ciphertextInBin))
 # ------------------------------------------------------------
 print("Decryption")
 # 4D60E325F9573C0B211A94B9586C0E8F11DF156FD3C0221C    =bodzzzzzsasdsfjhbodzzzzz
 # '4D60E325F9573C0B'  # =bodzzzzz
-ct = '4D60E325F9573C0B211A94B9586C0E8F11DF156FD3C0221C'  # =bodzzzzz
-ct2bin = hex2bin(ct)
-myList=inputToBlocks(ct2bin)
-rkb_rev = rkb[::-1]
-rk_rev = rk[::-1]
-final_textInBin=decrypt_CBC(myList,iv)
-# print((final_textInBin))
-
-
-# to convert to textplain
-final_text = bytes.fromhex(bin2hex(final_textInBin)).decode("ASCII").replace(';', '\n- ')
-print(final_text)
-
-
-
+# ct = '4D60E325F9573C0B211A94B9586C0E8F11DF156FD3C0221C'  # =bodzzzzz
+# ct2bin = hex2bin(ct)
+# myList=inputToBlocks(ct2bin)
+# rkb_rev = rkb[::-1]
+# rk_rev = rk[::-1]
+# final_textInBin=decrypt_CBC(myList,iv)
+# # print((final_textInBin))
+#
+#
+# # to convert to textplain
+# final_text = bytes.fromhex(bin2hex(final_textInBin)).decode("ASCII").replace(';', '\n- ')
+# print(final_text)
