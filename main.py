@@ -214,7 +214,7 @@ final_perm = [40, 8, 48, 16, 56, 24, 64, 32,
               33, 1, 41, 9, 49, 17, 57, 25]
 
 
-def encrypt_DES(pt, rkb, rk):
+def encrypt_DES(pt, rkb):
     # pt = hex2bin(pt)
 
     # Initial Permutation
@@ -266,7 +266,7 @@ def encrypt_CBC(myList, iv):
     for i in range(len(myList)):
         result = xor(myList[i], iv)
         # print(result)
-        cipher_text = encrypt_DES(result, rkb, rk)
+        cipher_text = encrypt_DES(result, rkb)
         final_ciphertext += cipher_text
         iv = cipher_text
     return final_ciphertext
@@ -275,7 +275,7 @@ def encrypt_CBC(myList, iv):
 def decrypt_CBC(myList, iv):
     final_text = ''
     for i in range(len(myList)):
-        text = encrypt_DES(myList[i], rkb_rev, rk_rev)
+        text = encrypt_DES(myList[i], rkb_rev)
         result = xor(text, iv)
         final_text += result
         iv = myList[i]
@@ -322,7 +322,7 @@ left = key[0:28]
 right = key[28:56]
 
 rkb = []  # rkb for RoundKeys in binary
-rk = []  # rk for RoundKeys in hexadecimal
+
 for i in range(0, 16):
     # Shifting the bits by nth shifts by checking from shift table
     left = shift_left(left, shift_table[i])
@@ -335,7 +335,7 @@ for i in range(0, 16):
     round_key = permute(combine_str, key_comp, 48)
 
     rkb.append(round_key)
-    rk.append(bin2hex(round_key))
+
 
 iv = "133457799BBCDFF1"
 # bodzzzzzsasdsfjhbodzzzzz
@@ -367,7 +367,7 @@ ct = '4D60E325F9573C0B211A94B9586C0E8F11DF156FD3C0221C'
 ct2bin = hex2bin(ct)
 myList=inputToBlocks(ct2bin)
 rkb_rev = rkb[::-1]
-rk_rev = rk[::-1]
+
 final_textInBin=decrypt_CBC(myList,iv)
 # print((final_textInBin))
 
@@ -411,7 +411,6 @@ class MyWindow:
         ct2bin = hex2bin(ct)
         myList = inputToBlocks(ct2bin)
         rkb_rev = rkb[::-1]
-        rk_rev = rk[::-1]
         final_textInBin = decrypt_CBC(myList, iv)
         # to convert to textplain
 
